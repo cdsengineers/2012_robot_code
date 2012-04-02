@@ -1,4 +1,3 @@
-package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

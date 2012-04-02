@@ -1,5 +1,3 @@
-package edu.wpi.first.wpilibj.templates;
-
 //import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
