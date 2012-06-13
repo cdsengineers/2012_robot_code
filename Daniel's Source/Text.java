@@ -1,9 +1,9 @@
+package edu.wpi.first.wpilibj.templates;
+
 
 import edu.wpi.first.wpilibj.DriverStationLCD;
 
 public class Text {
-
-    
     private static DriverStationLCD dash;
     private static long offset;
     private static int currentLineNumber = 0;

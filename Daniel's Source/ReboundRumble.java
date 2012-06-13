@@ -1,3 +1,13 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) FIRST 2008. All Rights Reserved.                             */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
+package edu.wpi.first.wpilibj.templates;
+
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -16,7 +26,18 @@ public class ReboundRumble extends IterativeRobot {
     int loopcount = 0;
     
     public void robotInit() {
-        cam = AxisCamera.getInstance("192.168.0.90");
+        /*try {
+            cam = AxisCamera.getInstance("10.21.34.11");
+            tx.dsWrite("camera initialized", 1);
+        }
+        catch (Exception e) {
+            tx.dsWrite("cam init failed", 1);
+        }
+        finally {
+            tx.updateLCD();
+        }
+        
+        */
         dr = new PWMdrive();
         cs = new Controls();
         ev = new Elevator();
@@ -24,10 +45,10 @@ public class ReboundRumble extends IterativeRobot {
         st = new Shooter();
         try {
             Watchdog.getInstance().setEnabled(false);
-            tx.dsWrite("The dog is dead. Cheer!", 1);
+            tx.dsWrite("The dog is dead. Cheer!", 2);
         }
         catch (Exception e){
-            tx.dsWrite("The dog is Immortal", 1);
+            tx.dsWrite("The dog is Immortal", 2);
         }
         finally {
             tx.updateLCD();
@@ -50,7 +71,8 @@ public class ReboundRumble extends IterativeRobot {
     }
 
     public void teleopInit() {
-        tx.updateWith("Teleop Initialized", 0);
+        tx.dsWrite("Teleop Initialized", 0);
+        tx.updateLCD();
     }
     public void teleopPeriodic() {
         cs.updateButtons(); //don't touch. Refreshes array of all buttons
@@ -58,8 +80,8 @@ public class ReboundRumble extends IterativeRobot {
         //if (cs.buttons[2][11]) imu.reset(); //only resets gyro. for now...must get more sensors
         
         //start of shifting code
-        if (cs.getButton(1, cs.GAMEPAD_R1)) shiftUp = true;
-        else if(cs.getButton(1, cs.GAMEPAD_R2)) shiftDown = true;
+        if (cs.getButton(1, 6)) shiftUp = true;
+        else if(cs.getButton(1, 8)) shiftDown = true;
         else if(shiftUp && !cs.getButton(1, cs.GAMEPAD_R1)) { //only allows shift if button has been pushed, then released, to allow one shift per click.
             dr.shift(true);
             shiftUp = false;
@@ -74,17 +96,16 @@ public class ReboundRumble extends IterativeRobot {
         dr.setSpeed(PWMdrive.RIGHT_SIDE, -cs.getRawAxis(1, cs.GAMEPAD_RIGHT_CONTROL), true);
         
         //shooter code
-        if (cs.buttons[1][0]) st.setVoltage(cs.getY(2)*13); //manual shooter
-        else if (cs.buttons[1][12]) st.setVoltage(7.4); //shoot from fender for 3 pts, button 3
-        else if (cs.buttons[1][11]) st.setVoltage(7.4); //shoot from fender side for 3 pts, button 2
+        if (cs.getButton(2,1)) st.setVoltage(cs.getY(2)*13); //manual shooter
+        else if (cs.getButton(2,5)) st.setVoltage(7.4); //shoot from fender side for 3 pts, button 2
         //else if (cs.buttons[1][7]) st.setVoltage(6.0); //shoot with a robot in front
         //else if (cs.buttons[1][8]) st.setVoltage(9.8); //shoot from key...maybe..
         
         //elevator code
-        if (cs.buttons[1][2]) {
+        if (cs.getButton(2,3)) {
             ev.goUp();
         }
-        else if (cs.buttons[1][1]) {
+        else if (cs.getButton(2,2)) {
             ev.goDown();
         }        
         else {
@@ -95,8 +116,8 @@ public class ReboundRumble extends IterativeRobot {
         if (loopcount == 25) {
             tx.dsWrite("Left:" + dr.getSpeed(dr.LEFT_SIDE) + " Right:" + dr.getSpeed(dr.RIGHT_SIDE), 1);
             tx.dsWrite("SHIFT:" + dr.getShift(), 3);
-            //tx.dsWrite(ev.inteligentOutput(st.getAmps()), 4);
-            tx.dsWrite("Shooter:"+ st.getVoltage(),5);
+            tx.dsWrite(ev.inteligentOutput(st.getAmps()), 4);
+            tx.dsWrite("Shooter:"+ st.getAmps(),5);
             tx.updateLCD();
             loopcount = -1;
         }

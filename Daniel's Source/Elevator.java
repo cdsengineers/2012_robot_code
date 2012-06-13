@@ -1,3 +1,5 @@
+package edu.wpi.first.wpilibj.templates;
+
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
